@@ -1,40 +1,30 @@
-// @ts-nocheck
-/* eslint-disable */
-
 // Styles
 import './VSheet.sass'
 
 // Utilities
-import { defineComponent, computed, h, mergeProps } from 'vue'
+import { defineComponent, h } from 'vue'
 import { makeBorderRadiusProps, useBorderRadiusClasses } from '../../composables/border-radius'
-import { dimensionsFactory } from '../../composables/dimensions'
+import { makeDimensionProps, useDimensionStyles } from '../../composables/dimensions'
 import { makeElevationProps, useElevationClasses } from '../../composables/elevation'
 import { makeTagProps } from '../../composables/tag'
 import { useTheme } from '../../composables/theme'
 import makeProps from '../../util/makeProps'
 
-const { makeDimensionsProps, useDimensions } = dimensionsFactory('width', 'height')
-
-/* @vue/component */
 export default defineComponent({
   name: 'VSheet',
 
   props: makeProps({
     ...makeBorderRadiusProps(),
-    ...makeDimensionsProps(),
+    ...makeDimensionProps(),
     ...makeElevationProps(),
     ...makeTagProps(),
   }),
 
   setup (props, { attrs, slots }) {
     const { borderRadiusClasses } = useBorderRadiusClasses(props)
-    const { dimensionStyles } = useDimensions(props)
+    const { dimensionStyles } = useDimensionStyles(props)
     const { elevationClasses } = useElevationClasses(props)
-    const theme = useTheme()
-
-    console.log(theme)
-    console.log(dimensionStyles.value)
-    console.log(elevationClasses.value)
+    const { themeClass } = useTheme()
 
     return () => (
       h(props.tag, {
@@ -43,11 +33,12 @@ export default defineComponent({
           'v-sheet',
           borderRadiusClasses.value,
           elevationClasses.value,
+          themeClass.value,
         ],
-        style: [dimensionStyles.value]
+        style: [dimensionStyles.value],
       }, slots)
     )
-  }
+  },
 
   // props: {
   //   outlined: Boolean,
